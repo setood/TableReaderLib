@@ -48,6 +48,7 @@
     <Compile Include="TableColumn.cs" />
     <Compile Include="TableReader.cs" />
     <Compile Include="TableRow.cs" />
+    <Compile Include="TypeConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />

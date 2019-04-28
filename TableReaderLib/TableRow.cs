@@ -84,19 +84,20 @@ namespace TableReaderLib
         /// <returns></returns>
         public T GetCellValue<T>(int index)
         {
+            return TypeConverter.From<T>(CellsValues[index]);
             //if (CellsValues[index] == null)
             //    return default(T);
             //Type unNullableType = Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
             //return (T)Convert.ChangeType(CellsValues[index], unNullableType);
 
-            if (CellsValues[index] == null)
-                return default(T);
-            Type unNullableType = typeof(T);  //Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
+            //if (CellsValues[index] == null)
+            //    return default(T);
+            //Type unNullableType = typeof(T);  //Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
 
-            var converter = TypeDescriptor.GetConverter(unNullableType);
-            return converter.CanConvertFrom(CellsValues[index].GetType()) ?
-                (T)converter.ConvertFrom(CellsValues[index]) :
-                throw new InvalidCastException("Can't format " + CellsValues[index].ToString() + "   To " + typeof(T).ToString());
+            //var converter = TypeDescriptor.GetConverter(unNullableType);
+            //return converter.CanConvertFrom(CellsValues[index].GetType()) ?
+            //    (T)converter.ConvertFrom(CellsValues[index]) :
+            //    throw new InvalidCastException("Can't format " + CellsValues[index].ToString() + "   To " + typeof(T).ToString());
 
         }
 
