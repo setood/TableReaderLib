@@ -6,9 +6,12 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 namespace ExcelReaderForTableReaderLib
 {
+    /// <summary>
+    /// Class helps for get & dispose Excel WorkSheet
+    /// </summary>
     internal class MSExcelWorker
     {
-        MSExcelWorker singletonInstance;
+        //MSExcelWorker singletonInstance;
         Excel._Application App { get; set; }
         public Excel._Worksheet WorkSheet { get; private set; }
         Excel._Workbook WorkBook { get; set; }

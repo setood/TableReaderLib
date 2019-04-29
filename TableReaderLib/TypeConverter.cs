@@ -19,10 +19,9 @@ namespace TableReaderLib
             if (value == null)
                 return default(T);
             Type unNullableType = Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
-            var valueType = value.GetType();
-
             if (typeAdapter != null)
-                value = typeAdapter.Clean<T>(value);
+                value = typeAdapter.Clean(value, unNullableType);
+            var valueType = value.GetType();
             if (valueType == unNullableType)
                 return (T)value;
             var converter = TypeDescriptor.GetConverter(unNullableType);

@@ -14,10 +14,7 @@ namespace TableReaderLib
         /// <summary>
         /// Format  value  from Tin to Tout type 
         /// </summary>
-        /// <typeparam name="Tin"></typeparam>
-        /// <typeparam name="Tout"></typeparam>
-        /// <param name="value"></param>
         /// <returns></returns>
-        T Clean<T>(object value);
+        object Clean(object value, Type typeToConvert);
     }
 }

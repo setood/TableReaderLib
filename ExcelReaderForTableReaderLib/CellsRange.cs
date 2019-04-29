@@ -40,8 +40,9 @@ namespace ExcelReaderForTableReaderLib
         
         private T[] GetMultiDementialArrayRow<T>(T[,] matrix, int rowIndex)
         {
-            return Enumerable.Range(0, matrix.GetLength(1))
-                    .Select(x => matrix[rowIndex, x])
+            var rowLength = matrix.GetLength(1);
+            return Enumerable.Range(1,rowLength)
+                    .Select(x => matrix[rowIndex + 1, x])
                     .ToArray();
         }
     }

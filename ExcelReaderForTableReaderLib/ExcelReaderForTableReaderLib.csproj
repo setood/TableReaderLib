@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CellsRange.cs" />
+    <Compile Include="ExcelTypeConverter.cs" />
     <Compile Include="MSExcelSourceReader.cs" />
     <Compile Include="MSExcelWorker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

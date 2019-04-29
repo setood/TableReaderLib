@@ -18,7 +18,7 @@ namespace ConsoleAppDotNet
 
         private static void testExcelRangeClient()
         {
-            using (MSExcelSourceReader rdr = new MSExcelSourceReader(@"C:\Users\sevik\source\repos\TableReaderLib\DemoConsoleAppDotNet\TextSample.xlsx", "TextSample", 3))
+            using (MSExcelSourceReader rdr = new MSExcelSourceReader(@"C:\Users\sevik\source\repos\TableReaderLib\DemoConsoleAppDotNet\TextSample.xlsx", "TextSample", 3, true))
             {
                 TableColumn[] columns = new TableColumn[]
                 {

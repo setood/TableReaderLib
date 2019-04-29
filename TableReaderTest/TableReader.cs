@@ -23,11 +23,14 @@ namespace TableReaderTest
             CleanAll();
             var readersCollection = new Dictionary<string, ISourceReader>()
             {
-             //   { "ReadersForTableReaderLib.CsvSourceReader + .txt", new ReadersForTableReaderLib.CsvSourceReader(@"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.txt", "|") },
-             //{ "ReadersForTableReaderLib.CsvSourceReader + .csv", new ReadersForTableReaderLib.CsvSourceReader(@"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.csv", ";") },
+                { "ReadersForTableReaderLib.CsvSourceReader + .txt", new ReadersForTableReaderLib.CsvSourceReader(@"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.txt", "|") },
+             { "ReadersForTableReaderLib.CsvSourceReader + .csv", new ReadersForTableReaderLib.CsvSourceReader(@"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.csv", ";") },
                 {"ExcelReaderForTableReaderLib.MSExcelSourceReader + .xlsx",
                     new ExcelReaderForTableReaderLib.MSExcelSourceReader(
-                        @"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.xlsx","TextSample",10) }
+                        filePath: @"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.xlsx",
+                        sheetName: "TextSample",
+                        rowsInCacheWindow: 10,
+                        isEmptyRowIsTableEnd: true) }
             };
             _tableTextReadersCollection = new Dictionary<string, TableReaderLib.TableReader>();
             foreach (var rdr in readersCollection)
@@ -47,7 +50,7 @@ namespace TableReaderTest
         [ClassCleanupAttribute]
         public static void CleanAll()
         {
-            var excels = System.Diagnostics.Process.GetProcessesByName("EXCEL.EXE");
+            var excels = System.Diagnostics.Process.GetProcessesByName("EXCEL");
             for (int i = 0; i< excels.Length; i++)
             {
                 excels[i].Kill();
@@ -64,25 +67,11 @@ namespace TableReaderTest
             {
                 var r = readers[i];
                 r.IsFirstRowHeaders = true;
-                r.TakeRows = null;
+                r.TakeRows = 60;
                 r.SkippedRows = 0;
                 r.StartRow = 0;
             }
         }
-
-        //[TestMethod]
-        //public void TestExcelCreateInstance()
-        //{
-        //    var erdr = new ExcelReaderForTableReaderLib.MSExcelSourceReader(
-        //               @"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.xlsx", "TextSample", 10);
-        //    var tRdr =
-        //               new TableReaderLib.TableReader(
-        //                   erdr,
-        //                   TestTableModel.Columns);
-        //    tRdr.IsFirstRowHeaders = true;
-
-        //    var r = tRdr.FirstOrDefault();
-        //}
 
         [TestMethod]
         public void RowsCount()
@@ -110,7 +99,13 @@ namespace TableReaderTest
                 {
                     var row = new TestTableModel.Row();
                     row.Col0 = r.GetCellValue<string>(0);
-                    row.Col1 = r.GetCellValue<int?>(1);
+                    //if (t.Key.ToLower().Contains("excel"))
+                    //{
+                    //    var val =  r.GetCellValue<double?>(1);
+                    //    row.Col1 = (int)val;
+                    //}
+                    //else
+                        row.Col1 = r.GetCellValue<int?>(1);
                     row.Col2 = r.GetCellValue<double?>(2);
                     row.Col3 = r.GetCellValue<DateTime?>(3);
                     row.Col4 = r.GetCellValue<TimeSpan?>(4);
@@ -218,6 +213,7 @@ namespace TableReaderTest
         [TestMethod]
         public void TestTakeRows()
         {
+            ResetReadersState();
             foreach (var t in _tableTextReadersCollection)
             {
                 ///проверить количество строк.
@@ -226,6 +222,7 @@ namespace TableReaderTest
                 t.Value.TakeRows = 1;
                 t.Value.StartRow = 0;
                 t.Value.SkippedRows = 0;
+                var rows = t.Value.ToArray();
                 var v01 = t.Value.Count();
                 var v02 = t.Value.TakeRows;
                 Assert.AreEqual(t.Value.Count(), t.Value.TakeRows);

@@ -11,9 +11,9 @@ namespace ExcelReaderForTableReaderLib
     {
         #region especiality class code
 
-        public string FilePath { get; private set; }
-        public string SheetName { get; private set; }
-        private int CurrentRowIndex  { get; set; }
+        //public string FilePath { get; private set; }
+        //public string SheetName { get; private set; }
+        private int CurrentRowIndex { get; set; }
         private int RowsInCacheWindow { get; set; }
         /// <summary>
         /// Первая строка которую необходимо считывать
@@ -25,22 +25,33 @@ namespace ExcelReaderForTableReaderLib
         /// Последняя доступная для чтения строка. ниже неё нельзя помещать фокус
         /// </summary>
         private int LastTakenRowIndex => TakeRows == null ? int.MaxValue : FirstRowInTableIndex + TakeRows.Value;
-        /// <summary>
-        /// на сколько строк можно перенести фокус
-        /// </summary>
+        private int LastColumnIndex => (Columns == null || Columns.Count() == 0) ? 0 : Columns.Max(c => c.IndexInSource);
+
         private MSExcelWorker excelWorker { get; set; }
         private ReadingBooster Booster { get; set; }
-        public MSExcelSourceReader(string filePath, string sheetName, int rowsInCacheWindow)
+        private bool IsEmptyRowIsTableEnd {get; set;}
+
+        public MSExcelSourceReader(string filePath, string sheetName, int rowsInCacheWindow, bool isEmptyRowIsTableEnd)
         {
-            FilePath = filePath;
-            SheetName = sheetName;
+            //FilePath = filePath;
+            //SheetName = sheetName;
+            IsEmptyRowIsTableEnd = isEmptyRowIsTableEnd;
             RowsInCacheWindow = rowsInCacheWindow;
             excelWorker = new MSExcelWorker();
             excelWorker.Open( filePath, sheetName);
-            //Booster = new ReadingBooster(excelWorker.WorkSheet, 0)
             Columns = new TableColumn[0];
             Reset();
         }
+
+        private MSExcelSourceReader(MSExcelWorker excelWorker, int rowsInCacheWindow)
+        {
+            RowsInCacheWindow = rowsInCacheWindow;
+            this.excelWorker = excelWorker;
+            Columns = new TableColumn[0];
+            Reset();
+        }
+
+
 
         #endregion
 
@@ -57,15 +68,14 @@ namespace ExcelReaderForTableReaderLib
         private IEnumerable<TableColumn> Columns { get => _columns; set { _columns = value; Reset(); } }
         public ISourceReader CreateReaderClone(IEnumerable<TableColumn> columns, bool isFirstRowHeaders, int startRow, int skippedRows, int? takeRows)
         {
-            var thisCopy = new MSExcelSourceReader(this.FilePath, this.SheetName, this.RowsInCacheWindow);
+            var thisCopy = new MSExcelSourceReader(this.excelWorker, this.RowsInCacheWindow);
             //thisCopy.FocusPosition = 0;
             //thisCopy.RowsInFocus = this.RowsInFocus;
             //thisCopy.CurrentRowInFocus = 0;
             //thisCopy.WorkRange = null;
-            thisCopy.excelWorker = new MSExcelWorker();
-
+            //thisCopy.excelWorker = this.excelWorker;
+            thisCopy.IsEmptyRowIsTableEnd = this.IsEmptyRowIsTableEnd;
             thisCopy.Columns = columns;
-            thisCopy.Booster = new ReadingBooster(thisCopy.excelWorker.WorkSheet, this.Columns.Max(c => c.IndexInSource));
             thisCopy.IsFirstRowHeaders = isFirstRowHeaders;
             thisCopy.StartRow = startRow;
             thisCopy.SkippedRows = skippedRows;
@@ -85,7 +95,7 @@ namespace ExcelReaderForTableReaderLib
                 }
 
                 var RowData = Booster.GetRow(CurrentRowIndex);
-                TableRow row = new TableRow(this.Columns.ToArray(), RowData);
+                TableRow row = new TableRow(this.Columns.ToArray(), RowData, ExcelTypeConverter.Converter);
                 return row;
 
             }
@@ -126,12 +136,11 @@ namespace ExcelReaderForTableReaderLib
 
         public void Reset()
         {
-            CurrentRowIndex = -1;
-            //tempCurrentRow = null;
-            //FocusPosition = FirstRowInTableIndex - RowsInFocus;
-            //CurrentRowInFocus = RowsInFocus - 1; //при вызове MoveNext следующей строкой будет с нулевым индексом.
+            int preInitIndex = -1;
 
-            //WorkRange = null;
+            CurrentRowIndex = preInitIndex + FirstRowInTableIndex;
+            Booster = new ReadingBooster(this.excelWorker.WorkSheet, this.LastColumnIndex);
+            
 
         }
 
@@ -142,11 +151,16 @@ namespace ExcelReaderForTableReaderLib
 
         public bool MoveNext()
         {
-            if (CurrentRowIndex + 1 > LastTakenRowIndex)
+            if (CurrentRowIndex + 1 >= LastTakenRowIndex)
                 return false;
+
+            if (IsEmptyRowIsTableEnd && CurrentRowIndex >= 0 && this.Current.All(c => c == null))
+            {
+                return false;
+            }
             CurrentRowIndex++;
             return true;
-        }
+         }
         #endregion
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
@@ -159,7 +173,7 @@ namespace ExcelReaderForTableReaderLib
                 if (disposing)
                 {
                     // TODO: dispose managed state (managed objects).
-                    excelWorker.Dispose();
+                    //excelWorker.Dispose();
                     excelWorker = null;
                 }
 
