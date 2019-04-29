@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Office.Interop.Excel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,9 +19,30 @@ namespace ExcelReaderForTableReaderLib
             get => ExcelRange[row + 1, column + 1];
         }
 
+
+
         public CellsRange(object[,] excelRange)
         {
             this.ExcelRange = excelRange;
+        }
+        public CellsRange(_Worksheet worksheet, int startRow, int rowsCount, int startColumnIndex, int columnsCount)
+        {
+            var startCell = worksheet.Cells[startRow + 1, startColumnIndex + 1];
+            var endCell = worksheet.Cells[startRow + 1 + rowsCount, startColumnIndex + 1 + columnsCount];
+            this.ExcelRange = worksheet.Range[startCell, endCell].Value2;
+
+        }
+
+        public object[] GetRow(int rowIndex)
+        {
+            return GetMultiDementialArrayRow(ExcelRange, rowIndex);
+        }
+        
+        private T[] GetMultiDementialArrayRow<T>(T[,] matrix, int rowIndex)
+        {
+            return Enumerable.Range(0, matrix.GetLength(1))
+                    .Select(x => matrix[rowIndex, x])
+                    .ToArray();
         }
     }
 }

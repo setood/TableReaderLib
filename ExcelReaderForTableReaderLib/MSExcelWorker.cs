@@ -8,19 +8,19 @@ namespace ExcelReaderForTableReaderLib
 {
     internal class MSExcelWorker
     {
-        static MSExcelWorker singletonInstance;
-        static Excel._Application App { get; set; }
-        static Excel._Worksheet WorkSheet { get; set; }
-        static Excel._Workbook WorkBook { get; set; }
+        MSExcelWorker singletonInstance;
+        Excel._Application App { get; set; }
+        public Excel._Worksheet WorkSheet { get; private set; }
+        Excel._Workbook WorkBook { get; set; }
         //static Dictionary<string, Excel._Workbook> WorkBoooks { get; set; }
         //static Dictionary<string, Excel._Worksheet> WorkSheets { get; set; }
-        static string FilePath { get; set; }
-        static string SheetName { get; set; }
-        static bool IsInit = false;
+        string FilePath { get; set; }
+        string SheetName { get; set; }
+        bool IsInit = false;
         public bool IsOpened => IsInit;
-        private MSExcelWorker() { }
+        public MSExcelWorker() { }
 
-        private static void Init()
+        private void Init()
         {
             if (IsInit == true)
                 return;
@@ -53,33 +53,33 @@ namespace ExcelReaderForTableReaderLib
         /// <param name="endRowIndex"></param>
         /// <param name="endColumnIndex"></param>
         /// <returns></returns>
-        public CellsRange GetCellsRange(int startRowIndex, int startColumnIndex, int endRowIndex, int endColumnIndex)
-        {
-            if (FilePath == null || SheetName == null)
-                throw new InvalidOperationException("Before calls this method, you must call Open(filePath, sheetName) method.");
-            Init();
-            startRowIndex++;
-            startColumnIndex++;
-            endRowIndex++;
-            endColumnIndex++;
-            if (startRowIndex == endRowIndex && startColumnIndex == endColumnIndex)
-            {
-                ///Если вместо диапазона ячеекуказан адрес одной ячейки, возвращается не массив значений а  значение одной ячейки, что ломает логику.
-                endColumnIndex++;
-            }
+        //public CellsRange GetCellsRange(int startRowIndex, int startColumnIndex, int endRowIndex, int endColumnIndex)
+        //{
+        //    if (FilePath == null || SheetName == null)
+        //        throw new InvalidOperationException("Before calls this method, you must call Open(filePath, sheetName) method.");
+        //    Init();
+        //    startRowIndex++;
+        //    startColumnIndex++;
+        //    endRowIndex++;
+        //    endColumnIndex++;
+        //    if (startRowIndex == endRowIndex && startColumnIndex == endColumnIndex)
+        //    {
+        //        ///Если вместо диапазона ячеекуказан адрес одной ячейки, возвращается не массив значений а  значение одной ячейки, что ломает логику.
+        //        endColumnIndex++;
+        //    }
 
-            var startCell = WorkSheet.Cells[startRowIndex, startColumnIndex];
-            var endCell = WorkSheet.Cells[endRowIndex, endColumnIndex];
+        //    var startCell = WorkSheet.Cells[startRowIndex, startColumnIndex];
+        //    var endCell = WorkSheet.Cells[endRowIndex, endColumnIndex];
            
-            return new CellsRange( WorkSheet.Range[startCell, endCell].Value2);
-        }
+        //    return new CellsRange( WorkSheet.Range[startCell, endCell].Value2);
+        //}
 
-        public static MSExcelWorker GetInstance()
-        {
-            if (singletonInstance == null)
-                singletonInstance = new MSExcelWorker();
-            return singletonInstance;
-        }
+        //public static MSExcelWorker GetInstance()
+        //{
+        //    if (singletonInstance == null)
+        //        singletonInstance = new MSExcelWorker();
+        //    return singletonInstance;
+        //}
         public void Open(string filePath, string sheetName = null)
         {
             if (FilePath == filePath && SheetName == sheetName)

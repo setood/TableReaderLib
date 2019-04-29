@@ -23,11 +23,11 @@ namespace TableReaderTest
             CleanAll();
             var readersCollection = new Dictionary<string, ISourceReader>()
             {
-                { "ReadersForTableReaderLib.CsvSourceReader + .txt", new ReadersForTableReaderLib.CsvSourceReader(@"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.txt", "|") },
-             { "ReadersForTableReaderLib.CsvSourceReader + .csv", new ReadersForTableReaderLib.CsvSourceReader(@"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.csv", ";") },
-                //{"ExcelReaderForTableReaderLib.MSExcelSourceReader + .xlsx",
-                //    new ExcelReaderForTableReaderLib.MSExcelSourceReader(
-                //        @"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.xlsx","TextSample",10) }
+             //   { "ReadersForTableReaderLib.CsvSourceReader + .txt", new ReadersForTableReaderLib.CsvSourceReader(@"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.txt", "|") },
+             //{ "ReadersForTableReaderLib.CsvSourceReader + .csv", new ReadersForTableReaderLib.CsvSourceReader(@"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.csv", ";") },
+                {"ExcelReaderForTableReaderLib.MSExcelSourceReader + .xlsx",
+                    new ExcelReaderForTableReaderLib.MSExcelSourceReader(
+                        @"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.xlsx","TextSample",10) }
             };
             _tableTextReadersCollection = new Dictionary<string, TableReaderLib.TableReader>();
             foreach (var rdr in readersCollection)
@@ -159,6 +159,7 @@ namespace TableReaderTest
         [TestMethod]
         public void TestIsFirstRowHeaders()
         {
+            ResetReadersState();
             foreach (var t in _tableTextReadersCollection)
             {
                 t.Value.IsFirstRowHeaders = true;
