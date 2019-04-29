@@ -11,19 +11,25 @@ namespace TableReaderLib
     {
         public static T From<T>(object value)
         {
-            //if (CellsValues[index] == null)
-            //    return default(T);
-            //Type unNullableType = Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
-            //return (T)Convert.ChangeType(CellsValues[index], unNullableType);
+            return From<T>(value, null);
+        }
 
+        internal static T From<T>(object value, ITypeAdapter typeAdapter)
+        {
             if (value == null)
                 return default(T);
-            Type unNullableType = typeof(T);  //Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
+            Type unNullableType = Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
+            var valueType = value.GetType();
 
+            if (typeAdapter != null)
+                value = typeAdapter.Clean<T>(value);
+            if (valueType == unNullableType)
+                return (T)value;
             var converter = TypeDescriptor.GetConverter(unNullableType);
-            return converter.CanConvertFrom(value.GetType()) ?
+            return converter.CanConvertFrom(valueType) ?
                 (T)converter.ConvertFrom(value) :
-                throw new InvalidCastException("Can't format " + value.ToString() + "   To " + typeof(T).ToString());
+                throw new InvalidCastException($"Can't format {value.ToString()} (Type is {value.GetType()})  To {typeof(T).ToString()}");
+
         }
     }
 }
