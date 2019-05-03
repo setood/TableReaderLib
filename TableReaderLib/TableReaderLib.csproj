@@ -50,10 +50,11 @@
     <Compile Include="TableReader.cs" />
     <Compile Include="TableRow.cs" />
     <Compile Include="TypeConverter.cs" />
+    <Compile Include="Описание\CodeForScreenshot.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
-    <None Include="Работа.docx" />
+    <None Include="Описание\Работа.docx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
