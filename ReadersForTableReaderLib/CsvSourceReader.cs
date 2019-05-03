@@ -118,7 +118,8 @@ namespace ReadersForTableReaderLib
 #endif
         }
 
-        public ISourceReader CreateReaderClone(IEnumerable<TableColumn> columns, bool isFirstRowHeaders, int startRow, int skippedRows, int? takeRows)
+        public ISourceReader CreateReaderClone(IEnumerable<TableColumn> columns, bool isFirstRowHeaders, 
+            int startRow, int skippedRows, int? takeRows)
         {
             var rdr = new CsvSourceReader(this.filePath, this._splitters[0], this.encoding);
             rdr.Columns = columns;
@@ -126,9 +127,6 @@ namespace ReadersForTableReaderLib
             rdr.StartRow = startRow;
             rdr.SkippedRows = skippedRows;
             rdr.TakeRows = takeRows;
-            //rdr.SkipStartRows();
-            //rdr.SkipAndReadHeaders();
-            //rdr.SkipSkippedRows();
             return rdr;
         }
 
@@ -170,7 +168,7 @@ namespace ReadersForTableReaderLib
 
         public void Reset()
         {
-            sr.Dispose();
+            sr?.Dispose();
             currentData = null;
             sr = new StreamReader(filePath, encoding ?? Encoding.Default);
             readedRows = 0;
