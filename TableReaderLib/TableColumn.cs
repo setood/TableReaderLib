@@ -9,27 +9,15 @@ namespace TableReaderLib
         /// <summary>
         /// Название столбца
         /// </summary>
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name  {get; set;}
         /// <summary>
         /// Тип данных в столбце
         /// </summary>
-        public Type Type
-        {
-            get;
-            set;
-        }
+        public Type Type { get; set; }
 
         /// <summary>
         /// Номер столбца в источнике (от 0)
         /// </summary>
-        public int IndexInSource
-        {
-            get;
-            set;
-        }
+        public int IndexInSource { get; set; }
     }
 }

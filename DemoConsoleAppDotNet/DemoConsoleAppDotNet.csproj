@@ -55,7 +55,7 @@
       <Name>ExcelReaderForTableReaderLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\ReadersForTableReaderLib\ReadersForTableReaderLib.csproj">
-      <Project>{9555b171-b105-4b29-b08e-fa845618d6cd}</Project>
+      <Project>{1262737a-08d3-4bae-8bbe-65c544305fc9}</Project>
       <Name>ReadersForTableReaderLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\TableReaderLib\TableReaderLib.csproj">

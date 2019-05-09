@@ -5,13 +5,13 @@ VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TableReaderLib", "TableReaderLib\TableReaderLib.csproj", "{5707D99D-E043-48E2-AEC5-C75FD5D56CC6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReadersForTableReaderLib", "ReadersForTableReaderLib\ReadersForTableReaderLib.csproj", "{9555B171-B105-4B29-B08E-FA845618D6CD}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelReaderForTableReaderLib", "ExcelReaderForTableReaderLib\ExcelReaderForTableReaderLib.csproj", "{00F06641-71E6-421A-97EB-D235437E2F9F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoConsoleAppDotNet", "DemoConsoleAppDotNet\DemoConsoleAppDotNet.csproj", "{C180A1B7-CB46-4D75-9C84-DB4D8B1A1C5D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TableReaderTest", "TableReaderTest\TableReaderTest.csproj", "{01261555-78BD-4AE8-B21E-EE76DFF6AA5E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadersForTableReaderLib", "ReadersForTableReaderLib\ReadersForTableReaderLib.csproj", "{1262737A-08D3-4BAE-8BBE-65C544305FC9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,6 @@ Global
 		{5707D99D-E043-48E2-AEC5-C75FD5D56CC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5707D99D-E043-48E2-AEC5-C75FD5D56CC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5707D99D-E043-48E2-AEC5-C75FD5D56CC6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9555B171-B105-4B29-B08E-FA845618D6CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9555B171-B105-4B29-B08E-FA845618D6CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9555B171-B105-4B29-B08E-FA845618D6CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9555B171-B105-4B29-B08E-FA845618D6CD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{00F06641-71E6-421A-97EB-D235437E2F9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{00F06641-71E6-421A-97EB-D235437E2F9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00F06641-71E6-421A-97EB-D235437E2F9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +35,10 @@ Global
 		{01261555-78BD-4AE8-B21E-EE76DFF6AA5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01261555-78BD-4AE8-B21E-EE76DFF6AA5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01261555-78BD-4AE8-B21E-EE76DFF6AA5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1262737A-08D3-4BAE-8BBE-65C544305FC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1262737A-08D3-4BAE-8BBE-65C544305FC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1262737A-08D3-4BAE-8BBE-65C544305FC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1262737A-08D3-4BAE-8BBE-65C544305FC9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

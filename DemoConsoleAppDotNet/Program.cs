@@ -62,12 +62,12 @@ namespace ConsoleAppDotNet
 
 
             string headers = string.Join(";\t",table.SourceHeaders);
-            var row = table.ToArray()[2]; //строчка для примера
+            var row = table.ToArray()[2]; 
             string rowInfo =
                 $"column 1 value:{row.GetCellValue<int>(0)}, type:{row.GetCellValue<int>(0).GetType()}" + Environment.NewLine +
-                $"column 1 value:{row.GetCellValue<string>(1)}, type:{row.GetCellValue<string>(1).GetType()}" + Environment.NewLine +
-                $"column 1 value:{row.GetCellValue<DateTime>(2)}, type:{row.GetCellValue<DateTime>(2).GetType()}" + Environment.NewLine +
-                $"column 1 value:{row.GetCellValue<TimeSpan>(3)}, type:{row.GetCellValue<TimeSpan>(3).GetType()}" + Environment.NewLine;
+                $"column 2 value:{row.GetCellValue<string>(1)}, type:{row.GetCellValue<string>(1).GetType()}" + Environment.NewLine +
+                $"column 3 value:{row.GetCellValue<DateTime>(2)}, type:{row.GetCellValue<DateTime>(2).GetType()}" + Environment.NewLine +
+                $"column 4 value:{row.GetCellValue<TimeSpan>(3)}, type:{row.GetCellValue<TimeSpan>(3).GetType()}" + Environment.NewLine;
 
             Console.WriteLine(headers);
             Console.WriteLine(rowInfo);
