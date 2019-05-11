@@ -168,9 +168,8 @@ namespace ReadersForTableReaderLib
 
         public void Reset()
         {
-            sr?.Dispose();
-            currentData = null;
-            sr = new StreamReader(filePath, encoding ?? Encoding.Default);
+            sr.DiscardBufferedData();
+            sr.BaseStream.Position = 0;
             readedRows = 0;
             SkipStartRows();
             SkipAndReadHeaders();
