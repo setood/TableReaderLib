@@ -13,6 +13,7 @@ namespace ReadersForTableReaderLib
     {
         string filePath;
         Encoding encoding;
+        bool needToReset = true;
         protected StreamReader sr;
         protected string[] currentData;
         protected string[] _splitters;
@@ -33,7 +34,7 @@ namespace ReadersForTableReaderLib
                 if (value == _isFirstRowHeaders)
                     return;
                 _isFirstRowHeaders = value;
-                Reset();
+                needToReset = true;
             }
         }
         int _startRow;
@@ -45,7 +46,7 @@ namespace ReadersForTableReaderLib
                 if (_startRow != value)
                 {
                     _startRow = value;
-                    Reset();
+                    needToReset = true;
                 }
             }
         }
@@ -58,7 +59,7 @@ namespace ReadersForTableReaderLib
                 if (_skippedRows != value)
                 {
                     _skippedRows = value;
-                    Reset();
+                    needToReset = true;
                 }
             }
         }
@@ -71,7 +72,7 @@ namespace ReadersForTableReaderLib
                 if (_takeRows != value)
                 {
                     _takeRows = value;
-                    Reset();
+                    needToReset = true;
                 }
             }
         }
@@ -84,11 +85,12 @@ namespace ReadersForTableReaderLib
             if (splitter == null)
                 splitter = "|";
             _splitters = new string[] { splitter };
-            
+            needToReset = true;
         }
 
          bool Read()
         {
+            
             if (TakeRows != null && TakeRows <= readedRows)
                 return false;
             string temp = sr.ReadLine();
@@ -163,6 +165,8 @@ namespace ReadersForTableReaderLib
 
         public bool MoveNext()
         {
+            if (needToReset == true)
+                Reset();
             return this.Read();
         }
 
@@ -174,6 +178,7 @@ namespace ReadersForTableReaderLib
             SkipStartRows();
             SkipAndReadHeaders();
             SkipSkippedRows();
+            needToReset = false;
         }
 
         #region IDisposable Support
