@@ -38,10 +38,10 @@ namespace TableReaderTest
             new List<TRL.TableColumn>()
             {
                 new TRL.TableColumn(){Name = "col0", Type = typeof(string), IndexInSource = 0},
-                new TRL.TableColumn(){Name = "col1", Type = typeof(int?), IndexInSource = 1},
-                new TRL.TableColumn(){Name = "col2", Type = typeof(double?), IndexInSource = 2},
-                new TRL.TableColumn(){Name = "col3", Type = typeof(DateTime?), IndexInSource = 3},
-                new TRL.TableColumn(){Name = "col4", Type = typeof(TimeSpan?), IndexInSource = 4},
+                new TRL.TableColumn(){Name = "0", Type = typeof(int?), IndexInSource = 1},
+                new TRL.TableColumn(){Name = "34,4", Type = typeof(double?), IndexInSource = 2},
+                new TRL.TableColumn(){Name = null, Type = typeof(DateTime?), IndexInSource = 3},
+                new TRL.TableColumn(){Name = "11:11:11", Type = typeof(TimeSpan?), IndexInSource = 4},
             };
         public static object[][] Data = new object[][]
         {

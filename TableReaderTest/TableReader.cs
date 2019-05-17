@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TableReaderLib;
 using System.Linq;
 using System.Text;
+using ReadersForTableReaderLib;
 
 namespace TableReaderTest
 {
@@ -24,14 +25,14 @@ namespace TableReaderTest
             var readersCollection = new Dictionary<string, ISourceReader>()
             {
                { "CsvSourceReader + .txt", new ReadersForTableReaderLib.CsvSourceReader(@"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.txt", "|") },
-           //  { "CsvSourceReader + .csv", new ReadersForTableReaderLib.CsvSourceReader(@"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.csv", ";") },
-                //{"MSExcelSourceReader + .xlsx",
-                //    new ExcelReaderForTableReaderLib.MSExcelSourceReader(
-                //        filePath: @"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.xlsx",
-                //        sheetName: "TextSample",
-                //        rowsInCacheWindow: 10,
-                //        isEmptyRowIsTableEnd: true) },
-                //{"SqlSourceReader", new ReadersForTableReaderLib.SqlSourceReader(@"Data Source=DESKTOP-NC7TB13\SQLEXPRESS;Initial Catalog=TestTrening;Integrated Security=True", "SELECT [col0],[col1],[col2],[col3],[col4] FROM [TestTrening].[dbo].[ReaderTestTable]") }
+             { "CsvSourceReader + .csv", new ReadersForTableReaderLib.CsvSourceReader(@"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.csv", ";") },
+                {"MSExcelSourceReader + .xlsx",
+                    new ExcelReaderForTableReaderLib.MSExcelSourceReader(
+                        filePath: @"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.xlsx",
+                        sheetName: "TextSample",
+                        rowsInCacheWindow: 10,
+                        isEmptyRowIsTableEnd: true) },
+                {"SqlSourceReader", new ReadersForTableReaderLib.SqlSourceReader(@"Data Source=DESKTOP-NC7TB13\SQLEXPRESS;Initial Catalog=TestTrening;Integrated Security=True", "SELECT [col0],[col1],[col2],[col3],[col4] FROM [TestTrening].[dbo].[ReaderTestTable]") }
             };
             _tableTextReadersCollection = new Dictionary<string, TableReaderLib.TableReader>();
             foreach (var rdr in readersCollection)
@@ -100,13 +101,7 @@ namespace TableReaderTest
                 {
                     var row = new TestTableModel.Row();
                     row.Col0 = r.GetCellValue<string>(0);
-                    //if (t.Key.ToLower().Contains("excel"))
-                    //{
-                    //    var val =  r.GetCellValue<double?>(1);
-                    //    row.Col1 = (int)val;
-                    //}
-                    //else
-                        row.Col1 = r.GetCellValue<int?>(1);
+                    row.Col1 = r.GetCellValue<int?>(1);
                     row.Col2 = r.GetCellValue<double?>(2);
                     row.Col3 = r.GetCellValue<DateTime?>(3);
                     row.Col4 = r.GetCellValue<TimeSpan?>(4);
@@ -141,13 +136,13 @@ namespace TableReaderTest
             foreach (var t in _tableTextReadersCollection)
             {
                 
-                t.Value.StartRow = 1;
+                 t.Value.StartRow = 1;
                 ///первую строку скипнули, и в заголовки попали значения которые в модели данных являются стройкой.
-                Assert.AreEqual(t.Value.SourceHeaders[0], TestTableModel.Data[0][0].ToString());
-                Assert.AreEqual(t.Value.SourceHeaders[1], TestTableModel.Data[0][1].ToString());
+                Assert.AreEqual(t.Value.First().GetCellValue<string>(0).ToString(), TestTableModel.Data[1][0].ToString());
+                Assert.AreEqual(t.Value.First().GetCellValue<int>(1).ToString(), TestTableModel.Data[1][1].ToString());
 
                 t.Value.StartRow = 2;
-                Assert.AreEqual(t.Value.SourceHeaders[0], TestTableModel.Data[1][0].ToString());
+                Assert.AreEqual(t.Value.First().GetCellValue<string>(0).ToString(), TestTableModel.Data[2][0].ToString());
             }
 
 
@@ -160,7 +155,7 @@ namespace TableReaderTest
             {
                 t.Value.IsFirstRowHeaders = true;
                 Assert.AreEqual(t.Value.SourceHeaders[0], TestTableModel.Columns[0].Name);
-                Assert.AreEqual(t.Value.SourceHeaders[1], TestTableModel.Columns[1].Name);
+                //Assert.AreEqual(t.Value.SourceHeaders[1], TestTableModel.Columns[1].Name);
 
                 t.Value.IsFirstRowHeaders = false;
                 Assert.IsTrue(t.Value.SourceHeaders.Count() == 0);
