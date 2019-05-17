@@ -59,13 +59,11 @@ namespace ReadersForTableReaderLib
 
         object IEnumerator.Current => this.Current;
 
-        public bool IsFirstRowHeaders { get => this.isFirstRowHeaders; set => this.isFirstRowHeaders = value; }
-
         public ISourceReader CreateReaderClone(IEnumerable<TableColumn> columns, bool isFirstRowHeaders, int startRow, int skippedRows, int? takeRows)
         {
             var sqlSourceReaderClone = new SqlSourceReader(this.connectionString, this.sqlQueryString);
             sqlSourceReaderClone.columns = columns;
-            sqlSourceReaderClone.IsFirstRowHeaders = isFirstRowHeaders;
+            sqlSourceReaderClone.isFirstRowHeaders = isFirstRowHeaders;
             sqlSourceReaderClone.startRow = startRow;
             sqlSourceReaderClone.skippedRows = skippedRows;
             sqlSourceReaderClone.takeRows = takeRows;
