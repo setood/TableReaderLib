@@ -6,12 +6,13 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using TableReaderLib;
+using System.Globalization;
 
 namespace ReadersForTableReaderLib
 {
-    public class SqlSourceReader : ISourceReader
+    public class SqlSourceReader : LineReader
     {
-        
+
         private readonly string connectionString;
         private SqlConnection sqlConnection;
         private SqlDataReader dataReader;
@@ -28,54 +29,27 @@ namespace ReadersForTableReaderLib
                 new SqlCommand(sqlQueryString, sqlConnection);
             //sqlConnection.Open();
             //dataReader = command.ExecuteReader();
-            Reset();
+            //Reset();
         }
 
-        #region ISourceReader implementation
-        IEnumerable<TableColumn> columns;
-        bool isFirstRowHeaders;
-        int startRow;
-        int skippedRows;
-        int? takeRows;
-        
-            
-        public TableRow Current
+        protected override bool ReadNextLine()
         {
-            get
+            var result = dataReader.Read();
+            if (result == false)
+                return false;
+            List<object> values = new List<object>();
+            foreach (var c in Columns)
             {
-                List<object> values = new List<object>();
-                foreach (var c in columns)
-                {
-                    var val = dataReader.GetValue(c.IndexInSource);
-                    if (val == DBNull.Value)
-                        val = null;
-                    values.Add(val);
-                }
-                var newRow = new TableRow(columns.ToArray(), values);
-                return newRow;
+                var val = dataReader.GetValue(c.IndexInSource);
+                if (val == DBNull.Value)
+                    val = null;
+                values.Add(val);
             }
-
+            base.currentData = values.ToArray();
+            return true;
         }
 
-        object IEnumerator.Current => this.Current;
-
-        public ISourceReader CreateReaderClone(IEnumerable<TableColumn> columns, bool isFirstRowHeaders, int startRow, int skippedRows, int? takeRows)
-        {
-            var sqlSourceReaderClone = new SqlSourceReader(this.connectionString, this.sqlQueryString);
-            sqlSourceReaderClone.columns = columns;
-            sqlSourceReaderClone.isFirstRowHeaders = isFirstRowHeaders;
-            sqlSourceReaderClone.startRow = startRow;
-            sqlSourceReaderClone.skippedRows = skippedRows;
-            sqlSourceReaderClone.takeRows = takeRows;
-            return sqlSourceReaderClone;
-        }
-
-        public bool MoveNext()
-        {
-            return dataReader.Read();
-        }
-
-        public void Reset()
+        protected override void ResetSource()
         {
             dataReader?.Close();
             SqlCommand command =
@@ -83,44 +57,51 @@ namespace ReadersForTableReaderLib
             if (sqlConnection.State != ConnectionState.Open)
                 sqlConnection.Open();
             dataReader = command.ExecuteReader();
+            //if (IsFirstRowHeaders)
+            //    dataReader.Read();
         }
-        #endregion
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-        
 
-        protected virtual void Dispose(bool disposing)
+
+        public override T GetColumnValue<T>(int columnIndex, bool returnDefaultTypeValueIfException = false)
         {
-            if (!disposedValue)
+#if DEBUG
+            try
             {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects).
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
-                dataReader.Close();
-                sqlConnection.Dispose();
-                disposedValue = true;
+#endif
+                IFormatProvider frmt = CultureInfo.InvariantCulture;
+                if (typeof(T) == typeof(DateTime) || typeof(T) == typeof(DateTime?))
+                    frmt = CultureInfo.CurrentCulture;
+                return (T)Convert.ChangeType(((string)currentData[columnIndex]).Trim(), typeof(T), frmt);
+#if DEBUG
             }
+            catch (Exception ex)
+            {
+                throw;
+            }
+#endif
         }
 
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~SqlSourceReader() {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
+        public override ISourceReader CreateReaderClone(IEnumerable<TableColumn> columns, bool isFirstRowHeaders, int startRow, int skippedRows, int? takeRows)
         {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
+            var sqlSourceReaderClone = new SqlSourceReader(this.connectionString, this.sqlQueryString);
+            sqlSourceReaderClone.Columns = columns;
+            sqlSourceReaderClone.IsFirstRowHeaders = isFirstRowHeaders;
+
+            sqlSourceReaderClone.StartRow = startRow;
+            sqlSourceReaderClone.SkippedRows = skippedRows;
+            sqlSourceReaderClone.TakeRows = takeRows;
+            sqlSourceReaderClone.Reset();
+            //if (isFirstRowHeaders)
+            //    sqlSourceReaderClone.ReadNextLine();
+            return sqlSourceReaderClone;
         }
-        #endregion
+        
+        protected override void OnDispose()
+        {
+            dataReader.Close();
+            sqlConnection.Dispose();
+            dataReader = null;
+            sqlConnection = null;
+        }
     }
 }

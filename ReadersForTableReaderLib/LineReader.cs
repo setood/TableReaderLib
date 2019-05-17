@@ -74,12 +74,17 @@ namespace ReadersForTableReaderLib
             set => _columns = value;
 
         }
-        
-        
-
-
+      
         protected abstract  bool ReadNextLine();
-
+        public bool SkipLines(int count)
+        {
+            bool result = true;
+            for (int i = 0; i < count && result == true; i++)
+            {
+                result = ReadNextLine();
+            }
+            return result;
+        }
 
 
         public bool MoveNext()
@@ -88,20 +93,14 @@ namespace ReadersForTableReaderLib
                 Reset();
             if (TakeRows != null && TakeRows + SkippedRows + StartRow + (IsFirstRowHeaders? 1:0) <= readedRows)
                 return false;
-            readedRows++;
-            return ReadNextLine();
-        }
-        
-        public bool MoveNext(int count)
-        {
-            bool result = true;
-            for (int i = 0; i < count && result == true; i++)
+            var result = ReadNextLine();
+            if (result == true)
             {
-                result = MoveNext();
+                readedRows++;
+                return true;
             }
-            return result;
+            else return false;
         }
-
 
         public abstract T GetColumnValue<T>(int columnIndex, bool returnDefaultTypeValueIfException = false);
 
@@ -109,7 +108,7 @@ namespace ReadersForTableReaderLib
     int startRow, int skippedRows, int? takeRows);
 
 
-        private void SkipStartRows()=>MoveNext(StartRow);
+        private void SkipStartRows()=>SkipLines(StartRow);
         
 
         private void SkipAndReadHeaders()
@@ -119,7 +118,7 @@ namespace ReadersForTableReaderLib
             MoveNext();
         }
 
-        private void SkipSkippedRows() => MoveNext(SkippedRows);
+        private void SkipSkippedRows() => SkipLines(SkippedRows);
 
         public TableRow Current => new TableRow(this.Columns.ToArray(), this.Columns.Select(c => (object)this.currentData[c.IndexInSource]).ToArray());
 
