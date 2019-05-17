@@ -24,6 +24,10 @@ namespace TableReaderLib
             var valueType = value.GetType();
             if (valueType == unNullableType)
                 return (T)value;
+            if (typeof(T) == typeof(string))
+                return (T)(object)value.ToString();
+            if (typeof(T) == typeof(object))
+                return (T)value;
             var converter = TypeDescriptor.GetConverter(unNullableType);
             return converter.CanConvertFrom(valueType) ?
                 (T)converter.ConvertFrom(value) :
