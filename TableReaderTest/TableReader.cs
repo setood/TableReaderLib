@@ -23,14 +23,15 @@ namespace TableReaderTest
             CleanAll();
             var readersCollection = new Dictionary<string, ISourceReader>()
             {
-                { "ReadersForTableReaderLib.CsvSourceReader + .txt", new ReadersForTableReaderLib.CsvSourceReader(@"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.txt", "|") },
-             { "ReadersForTableReaderLib.CsvSourceReader + .csv", new ReadersForTableReaderLib.CsvSourceReader(@"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.csv", ";") },
-                {"ExcelReaderForTableReaderLib.MSExcelSourceReader + .xlsx",
-                    new ExcelReaderForTableReaderLib.MSExcelSourceReader(
-                        filePath: @"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.xlsx",
-                        sheetName: "TextSample",
-                        rowsInCacheWindow: 10,
-                        isEmptyRowIsTableEnd: true) }
+               //{ "CsvSourceReader + .txt", new ReadersForTableReaderLib.CsvSourceReader(@"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.txt", "|") },
+           //  { "CsvSourceReader + .csv", new ReadersForTableReaderLib.CsvSourceReader(@"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.csv", ";") },
+                //{"MSExcelSourceReader + .xlsx",
+                //    new ExcelReaderForTableReaderLib.MSExcelSourceReader(
+                //        filePath: @"C:\Users\sevik\source\repos\TableReaderLib\TableReaderTest\ForSourceTest\TextSample.xlsx",
+                //        sheetName: "TextSample",
+                //        rowsInCacheWindow: 10,
+                //        isEmptyRowIsTableEnd: true) },
+                {"SqlSourceReader", new ReadersForTableReaderLib.SqlSourceReader(@"Data Source=DESKTOP-NC7TB13\SQLEXPRESS;Initial Catalog=TestTrening;Integrated Security=True", "SELECT [col0],[col1],[col2],[col3],[col4] FROM [TestTrening].[dbo].[ReaderTestTable]") }
             };
             _tableTextReadersCollection = new Dictionary<string, TableReaderLib.TableReader>();
             foreach (var rdr in readersCollection)
